@@ -27,7 +27,13 @@ public class AccountService {
 	 * @return List<Account> List of accounts
 	 */
 	public List<Account> listAccount() {
-		return (List<Account>) accountRepository.findAll();
+		List<Account> list = null;
+		if (SessionData.isAdministrator()) {
+			list = (List<Account>) accountRepository.findAll();
+		} else {
+			list = (List<Account>) accountRepository.findByUserId(SessionData.getUser().getUserId());
+		}
+		return list;
 	}
 
 	/**

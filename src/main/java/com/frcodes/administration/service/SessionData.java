@@ -1,7 +1,10 @@
 package com.frcodes.administration.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
+import com.frcodes.administration.model.Account;
 import com.frcodes.administration.model.User;
 
 /**
@@ -16,6 +19,7 @@ import com.frcodes.administration.model.User;
 public class SessionData {
 
 	private static User user;
+	
 
 	private static SessionData instance;
 
@@ -37,6 +41,15 @@ public class SessionData {
 
 	public static void setUser(User user) {
 		SessionData.user = user;
+	}
+	
+	
+	public static boolean isAdministrator() {
+		boolean userAdministrator = Boolean.FALSE;
+		if (SessionData.getUser().getType().equals(User.UserType.ADMIN.name())) {
+			userAdministrator = Boolean.TRUE;
+		}
+		return userAdministrator;
 	}
 
 }

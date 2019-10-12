@@ -44,6 +44,7 @@ public class AccountServiceIntegrationTest {
 		user.setUserId(1L);
 		user.setName("Test");
 		user.setSurname("Test");
+		user.setType("ADMIN");
 		
 		SessionData.setUser(user);
 	}

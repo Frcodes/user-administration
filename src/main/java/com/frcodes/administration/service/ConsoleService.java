@@ -17,6 +17,10 @@ public class ConsoleService {
 		C, L, U, D, R, E
 	}
 
+	public enum ActionAdministrator {
+		C, L, U, E
+	}
+
 	@Autowired
 	private AccountService accountService;
 
@@ -30,13 +34,13 @@ public class ConsoleService {
 		System.out.println("-------------------------------------------");
 		System.out.println("-------------- Welcome ---------------------");
 		scanner = new Scanner(System.in);
-		
+
 		User user = login();
 		if (user != null) {
 			SessionData.setUser(user);
 			System.out.println("User session: " + user.getName() + ", " + user.getSurname());
 			System.out.println("");
-			
+
 			String action = chooseAction();
 			while (action == null || !action.equals("E")) {
 				processAction(action);
@@ -53,7 +57,7 @@ public class ConsoleService {
 
 		User user = null;
 		System.out.println("> Login");
-		System.out.print("> Insert user name: ");	
+		System.out.print("> Insert user name: ");
 		String username = scanner.nextLine();
 
 		try {
@@ -68,29 +72,37 @@ public class ConsoleService {
 		if (user == null) {
 			System.out.println("> User no registrated ");
 			System.out.println("> Do you want to have register ? (Y/N)");
-			String answer = scanner.nextLine();		
+			String answer = scanner.nextLine();
 			if (answer != null && answer.trim().toUpperCase().equals("Y")) {
-				
+
 				User userNew = this.readUser();
 				user = this.userService.createUser(userNew);
-			} 
+				System.out.println(
+						"> User registrated with ID: " + user.getUserId() + " and username: " + user.getName());
+			}
 		}
 		return user;
 	}
-	
-	
 
 	private String chooseAction() {
 
-		this.printWithUser("Choose action:  create (C), list(L), update(U), delete(D), user register (R), exit(E) ");
-		String line = scanner.nextLine();
-
 		String action = null;
 
+		if (SessionData.isAdministrator()) {
+			this.printWithUser("Choose action:  create (C), list(L), update(U), delete(D), user register(R), exit(E) ");
+		} else {
+			this.printWithUser("Choose action:  create (C), list(L), update(U), exit(E) ");
+		}
+		String line = scanner.nextLine();
 		if (line != null && !line.trim().isEmpty() && line.trim().length() == 1) {
 			action = line;
 			try {
 				Action.valueOf(line.toUpperCase());
+				if (SessionData.isAdministrator()) {
+					Action.valueOf(line.toUpperCase());
+				} else {
+					ActionAdministrator.valueOf(line.toUpperCase());
+				}
 			} catch (IllegalArgumentException ex) {
 				action = null;
 				this.printWithUserError("action no valid");
@@ -171,7 +183,7 @@ public class ConsoleService {
 
 		return user;
 	}
-	
+
 	private String readIBAN() {
 
 		String iBAN = null;
