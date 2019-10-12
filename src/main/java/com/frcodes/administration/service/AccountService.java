@@ -1,6 +1,13 @@
 package com.frcodes.administration.service;
 
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.xml.bind.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,11 +49,12 @@ public class AccountService {
 	 * 
 	 * @param userAccount Transfer object with acoount and user information
 	 * @return New account created
+	 * @throws ValidationException
 	 */
-	public Account createUserAccount(UserAccountDTO userAccount) {
+	public Account createUserAccount(UserAccountDTO userAccount) throws ValidationException {
 
+		validateUserAccount(userAccount);
 		User user = userService.createUser(userAccount);
-
 		Account account = new Account();
 		account.setUserId(user.getUserId());
 		account.setIban(userAccount.getIBAN());
@@ -66,18 +74,14 @@ public class AccountService {
 	 * 
 	 * @param userAccount New information of account
 	 * @return Account updated
-	 * @throws NotFoundException. Exception when not found account by IBAN.
+	 * @throws ValidationException
+	 * @throws                     NotFoundException. Exception when not found
+	 *                             account by IBAN.
 	 */
-	public Account updateUserAccount(UserAccountDTO userAccount) throws NotFoundException {
+	public Account updateUserAccount(UserAccountDTO userAccount) throws NotFoundException, ValidationException {
 
 		Account res = null;
-		if (userAccount == null) {
-			throw new IllegalArgumentException("Information is null");
-		}
-
-		if (userAccount.getIBAN() == null || userAccount.getIBAN().trim().isEmpty()) {
-			throw new IllegalArgumentException("IBAN is not correct");
-		}
+		validateUserAccount(userAccount);
 		Account accountOld = this.getAccountByIBAN(userAccount.getIBAN());
 
 		if (accountOld != null) {
@@ -144,6 +148,31 @@ public class AccountService {
 			throw new IllegalArgumentException("IBAN is not correct");
 		}
 		return accountRepository.findByIban(iBAN);
+	}
+
+	/**
+	 * Validates entity UserAccountDTO.
+	 * 
+	 * @param userAccount Entity UserAccountDTO
+	 * @throws ValidationException
+	 */
+	private void validateUserAccount(UserAccountDTO userAccount) throws ValidationException {
+
+		if (userAccount == null) {
+			throw new IllegalArgumentException("Information is null");
+		}
+
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Set<ConstraintViolation<UserAccountDTO>> violations = validator.validate(userAccount);
+
+		if (!violations.isEmpty()) {
+			StringBuilder str = new StringBuilder();
+			for (ConstraintViolation<UserAccountDTO> violation : violations) {
+				str.append(violation.getMessage()).append("\n");
+			}
+			throw new ValidationException(str.toString());
+		}
 	}
 
 }

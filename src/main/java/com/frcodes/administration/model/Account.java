@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "ACCOUNT")
@@ -20,7 +21,8 @@ public class Account {
 	@Column(nullable = false)
 	private Long userId;
 
-	@Column(unique = true, nullable = false)
+	@Size(min = 24, max = 24, message = "IBAN must be 24 characters")
+	@Column(unique = true, nullable = false, length = 24)
 	private String iban;
 
 	@Column

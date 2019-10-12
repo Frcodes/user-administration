@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import javax.xml.bind.ValidationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +39,6 @@ public class AccountServiceIntegrationTest {
 	@Autowired
 	private UserService userService;
 
-	
 	@Before
 	public void setUp() {
 		User user = new User();
@@ -45,20 +46,20 @@ public class AccountServiceIntegrationTest {
 		user.setName("Test");
 		user.setSurname("Test");
 		user.setType("ADMIN");
-		
+
 		SessionData.setUser(user);
 	}
-	
+
 	private UserAccountDTO buildUserAccountDTO() {
 		UserAccountDTO userAccount = new UserAccountDTO();
 		userAccount.setFistName("Paul");
 		userAccount.setLastName("Smith");
-		userAccount.setIBAN("001234AABB00");
+		userAccount.setIBAN("123456789001122336655440");
 		return userAccount;
 	}
 
 	@Test
-	public void listAccount() {
+	public void listAccount() throws ValidationException {
 
 		List<?> listEmpty = accountService.listAccount();
 		assertEquals(listEmpty.size(), 0L);
@@ -70,31 +71,31 @@ public class AccountServiceIntegrationTest {
 	}
 
 	@Test
-	public void createUserAccount() {
+	public void createUserAccount() throws ValidationException {
 
 		Account account = accountService.createUserAccount(buildUserAccountDTO());
 		assertNotNull(account);
 		assertEquals(accountService.listAccount().size(), 1L);
 	}
 
-	@Test(expected = DataIntegrityViolationException.class)
-	public void createUserAccountEmpty() {
+	@Test(expected = ValidationException.class)
+	public void createUserAccountEmpty() throws ValidationException {
 		UserAccountDTO userAccount = new UserAccountDTO();
 		accountService.createUserAccount(userAccount);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void updateUserAccountNull() throws NotFoundException {
+	public void updateUserAccountNull() throws NotFoundException, ValidationException {
 		accountService.updateUserAccount(null);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void updateUserAccountEmpty() throws NotFoundException {
+	@Test(expected = ValidationException.class)
+	public void updateUserAccountEmpty() throws NotFoundException, ValidationException {
 		accountService.updateUserAccount(new UserAccountDTO());
 	}
 
 	@Test
-	public void updateUserAccount() throws NotFoundException {
+	public void updateUserAccount() throws NotFoundException, ValidationException {
 
 		UserAccountDTO userAccount = buildUserAccountDTO();
 		accountService.createUserAccount(userAccount);
@@ -117,7 +118,7 @@ public class AccountServiceIntegrationTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void updateUserAccountNotFound() throws NotFoundException {
+	public void updateUserAccountNotFound() throws NotFoundException, ValidationException {
 		UserAccountDTO userAccount = buildUserAccountDTO();
 		accountService.updateUserAccount(userAccount);
 	}
@@ -128,7 +129,7 @@ public class AccountServiceIntegrationTest {
 	}
 
 	@Test
-	public void deleteAccountByIBAN() throws NotFoundException {
+	public void deleteAccountByIBAN() throws NotFoundException, ValidationException {
 
 		UserAccountDTO userAccount = buildUserAccountDTO();
 		accountService.createUserAccount(userAccount);

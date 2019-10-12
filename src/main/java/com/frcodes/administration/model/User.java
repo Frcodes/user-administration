@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "USER")
@@ -21,12 +22,14 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
+	@NotNull(message = "Name cannot be null")
 	@Column(length = 100, nullable = false)
 	private String name;
 
 	@Column(length = 100)
 	private String surname;
 
+	@NotNull(message = "User type cannot be null")
 	@Column(length = 50)
 	private String type;
 
