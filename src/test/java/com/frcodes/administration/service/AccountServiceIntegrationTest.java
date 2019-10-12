@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,17 @@ public class AccountServiceIntegrationTest {
 	@Autowired
 	private UserService userService;
 
+	
+	@Before
+	public void setUp() {
+		User user = new User();
+		user.setUserId(1L);
+		user.setName("Test");
+		user.setSurname("Test");
+		
+		SessionData.setUser(user);
+	}
+	
 	private UserAccountDTO buildUserAccountDTO() {
 		UserAccountDTO userAccount = new UserAccountDTO();
 		userAccount.setFistName("Paul");

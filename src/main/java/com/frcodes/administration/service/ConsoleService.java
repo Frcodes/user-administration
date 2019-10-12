@@ -29,12 +29,19 @@ public class ConsoleService {
 		System.out.println();
 		System.out.println("-------------------------------------------");
 		System.out.println("-------------- Welcome ---------------------");
-
-		login();
-		String action = chooseAction();
-		while (action == null || !action.equals("E")) {
-			processAction(action);
-			action = chooseAction();
+		scanner = new Scanner(System.in);
+		
+		User user = login();
+		if (user != null) {
+			SessionData.setUser(user);
+			System.out.println("User session: " + user.getName() + ", " + user.getSurname());
+			System.out.println("");
+			
+			String action = chooseAction();
+			while (action == null || !action.equals("E")) {
+				processAction(action);
+				action = chooseAction();
+			}
 		}
 
 		scanner.close();
@@ -42,27 +49,40 @@ public class ConsoleService {
 		System.out.println("-------------------------------------------");
 	}
 
-	private void login() {
+	private User login() {
 
+		User user = null;
 		System.out.println("> Login");
-		System.out.print("> Insert user: ");
-		scanner = new Scanner(System.in);
-		String userSession = scanner.nextLine();
+		System.out.print("> Insert user name: ");	
+		String username = scanner.nextLine();
 
-		SessionData.setUserSession(userSession);
-		System.out.println("User session: " + userSession);
-		System.out.println("");
+		try {
+			System.out.print("> Insert user ID: ");
+			String id = scanner.nextLine();
+			Long userId = Long.valueOf(id);
+			user = userService.validUser(userId, username);
+		} catch (NumberFormatException e) {
+			System.out.println("> User id format no valid");
+		}
 
-//		System.out.println("password: ");
-//		scanner.useDelimiter("[*]");
-//		String pass = scanner.nextLine();
-
+		if (user == null) {
+			System.out.println("> User no registrated ");
+			System.out.println("> Do you want to have register ? (Y/N)");
+			String answer = scanner.nextLine();		
+			if (answer != null && answer.trim().toUpperCase().equals("Y")) {
+				
+				User userNew = this.readUser();
+				user = this.userService.createUser(userNew);
+			} 
+		}
+		return user;
 	}
+	
+	
 
 	private String chooseAction() {
 
 		this.printWithUser("Choose action:  create (C), list(L), update(U), delete(D), user register (R), exit(E) ");
-		scanner = new Scanner(System.in);
 		String line = scanner.nextLine();
 
 		String action = null;
@@ -125,7 +145,6 @@ public class ConsoleService {
 
 		UserAccountDTO userAccount = new UserAccountDTO();
 		printWithUser("Insert account data:");
-		scanner = new Scanner(System.in);
 
 		printWithUser("First name:");
 		userAccount.setFistName(scanner.nextLine());
@@ -139,12 +158,25 @@ public class ConsoleService {
 		return userAccount;
 	}
 
+	private User readUser() {
+
+		User user = new User();
+		System.out.print("Insert user information:");
+
+		System.out.print("First name:");
+		user.setName(scanner.nextLine());
+
+		System.out.print("Lastname:");
+		user.setSurname(scanner.nextLine());
+
+		return user;
+	}
+	
 	private String readIBAN() {
 
 		String iBAN = null;
 
 		printWithUser("Insert IBAN:");
-		scanner = new Scanner(System.in);
 
 		iBAN = scanner.nextLine();
 
@@ -171,11 +203,11 @@ public class ConsoleService {
 	}
 
 	private void printWithUser(String str) {
-		System.out.println("[" + SessionData.getUserSession() + "] " + str);
+		System.out.println("[" + SessionData.getUser().getName() + "] " + str);
 	}
 
 	private void printWithUserError(String str) {
-		System.out.println("[" + SessionData.getUserSession() + "] - ERROR: " + str);
+		System.out.println("[" + SessionData.getUser().getName() + "] - ERROR: " + str);
 	}
 
 }

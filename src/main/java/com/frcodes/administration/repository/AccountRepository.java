@@ -7,7 +7,7 @@ import com.frcodes.administration.model.Account;
 
 
 @Repository
-public interface AccountRepository extends CrudRepository<Account, String> {
+public interface AccountRepository extends CrudRepository<Account, Long> {
 	
 	Account findByIban(String iban);
 }

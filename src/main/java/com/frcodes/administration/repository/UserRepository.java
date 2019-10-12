@@ -7,6 +7,6 @@ import com.frcodes.administration.model.User;
 
 
 @Repository
-public interface UserRepository extends CrudRepository<User, String> {
+public interface UserRepository extends CrudRepository<User, Long> {
 	
 }

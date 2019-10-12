@@ -2,6 +2,8 @@ package com.frcodes.administration.service;
 
 import org.springframework.stereotype.Component;
 
+import com.frcodes.administration.model.User;
+
 /**
  * Singleton class for load session data.
  * 
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SessionData {
 
-	private static String userSession;
+	private static User user;
 
 	private static SessionData instance;
 
@@ -29,12 +31,12 @@ public class SessionData {
 		return instance;
 	}
 
-	public static String getUserSession() {
-		return userSession;
+	public static User getUser() {
+		return user;
 	}
 
-	public static void setUserSession(String userSession) {
-		SessionData.userSession = userSession;
+	public static void setUser(User user) {
+		SessionData.user = user;
 	}
 
 }

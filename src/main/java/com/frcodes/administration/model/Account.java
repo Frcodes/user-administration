@@ -15,16 +15,16 @@ public class Account {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String accountId;
+	private Long accountId;
 
-	@Column(length = 100,  nullable=false)
-	private String userId;
+	@Column(nullable = false)
+	private Long userId;
 
-	@Column(unique=true, nullable=false) 
+	@Column(unique = true, nullable = false)
 	private String iban;
 
-	@Column(length = 100)
-	private String createdBy;
+	@Column
+	private Long createdBy;
 
 	@Column
 	private Date date;
@@ -41,19 +41,19 @@ public class Account {
 		enabled = Boolean.TRUE;
 	}
 
-	public String getAccountId() {
+	public Long getAccountId() {
 		return accountId;
 	}
 
-	public void setAccountId(String accountId) {
+	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
 
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -81,11 +81,11 @@ public class Account {
 		this.enabled = enabled;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 

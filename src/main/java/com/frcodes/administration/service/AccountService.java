@@ -44,7 +44,7 @@ public class AccountService {
 		Account account = new Account();
 		account.setUserId(user.getUserId());
 		account.setIban(userAccount.getIBAN());
-		account.setCreatedBy(SessionData.getUserSession());
+		account.setCreatedBy(SessionData.getUser().getUserId());
 		account = accountRepository.save(account);
 
 		return account;
@@ -75,9 +75,16 @@ public class AccountService {
 		Account accountOld = this.getAccountByIBAN(userAccount.getIBAN());
 
 		if (accountOld != null) {
-			User user = userService.createUser(userAccount);
-			accountOld.setUserId(user.getUserId());
-			res = accountRepository.save(accountOld);
+
+			if (accountOld.getCreatedBy() != null
+					&& SessionData.getUser().getUserId().equals(accountOld.getCreatedBy())) {
+				User user = userService.createUser(userAccount);
+				accountOld.setUserId(user.getUserId());
+				res = accountRepository.save(accountOld);
+			} else {
+				throw new SecurityException("No privilege for modify a account created by another user");
+			}
+
 		} else {
 			throw new NotFoundException("Account no found by IBAN");
 		}
@@ -102,8 +109,15 @@ public class AccountService {
 		}
 		Account accountOld = this.getAccountByIBAN(iBAN);
 		if (accountOld != null) {
-			accountRepository.delete(accountOld);
-			deleted = Boolean.TRUE;
+
+			if (accountOld.getCreatedBy() != null
+					&& SessionData.getUser().getUserId().equals(accountOld.getCreatedBy())) {
+				accountRepository.delete(accountOld);
+				deleted = Boolean.TRUE;
+			} else {
+				throw new SecurityException("No privilege for delete a account created by another user");
+			}
+
 		} else {
 			throw new NotFoundException("Account no found by IBAN");
 		}

@@ -67,13 +67,13 @@ public class UserServiceUnitTest {
 		Mockito.when(userRepository.findAll()).thenReturn(list);
 
 		User userSaved = new User();
-		userSaved.setUserId("0");
+		userSaved.setUserId(0L);
 		userSaved.setName("MOCK");
 
 		Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(userSaved);
 
-		Mockito.when(userRepository.findById("0")).thenReturn(Optional.of(userSaved));
-		Mockito.when(userRepository.findById("")).thenReturn(null);
+		Mockito.when(userRepository.findById(0L)).thenReturn(Optional.of(userSaved));
+		Mockito.when(userRepository.findById(null)).thenReturn(null);
 	}
 
 	@Test
@@ -85,17 +85,9 @@ public class UserServiceUnitTest {
 		User user = userService.createUser(userAccount);
 
 		assertNotNull(user.getUserId());
-		assertEquals(user.getUserId(), "0");
+		assertEquals(user.getUserId(), new Long(0));
 		assertEquals(user.getName(), "MOCK");
 		assertNull(user.getSurname());
-
-//		assertNotNull(user.getUserId());
-//		assertEquals(user.getName(), "Jhon");
-//		assertEquals(user.getSurname(), "Smith");
-//		assertTrue(user.getEnabled());
-//		assertEquals(user.getType(), User.UserType.BASIC);
-//		assertNotNull(user.getDate());
-
 	}
 
 	@Test
@@ -108,14 +100,14 @@ public class UserServiceUnitTest {
 	@Test
 	public void getUser() {
 
-		User user = userService.getUserByUserId("0");
+		User user = userService.getUserByUserId(0L);
 		assertEquals(user.getName(), "MOCK");
 	}
 
 	@Test
 	public void getUserNotFound() {
 
-		User user = userService.getUserByUserId("");
+		User user = userService.getUserByUserId(null);
 		assertNull(user);
 	}
 }

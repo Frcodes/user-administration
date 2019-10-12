@@ -31,7 +31,7 @@ public class UserService {
 	 * @param userId Id of user
 	 * @return Complete user information
 	 */
-	public User getUserByUserId(String userId) {
+	public User getUserByUserId(Long userId) {
 		Optional<User> optional = userRepository.findById(userId);
 		return optional != null && optional.isPresent() ? optional.get() : null;
 	}
@@ -47,7 +47,29 @@ public class UserService {
 		User user = new User();
 		user.setName(userAccount.getFistName());
 		user.setSurname(userAccount.getLastName());
-		user = userRepository.save(user);
+		return this.createUser(user);
+	}
+
+	public User createUser(User user) {
+		return userRepository.save(user);
+	}
+	
+	public User validUser(Long userId, String userName) {
+
+		User user = null;
+
+		if (userId == null) {
+			throw new IllegalArgumentException("User ID is not correct");
+		}
+		
+		if (userName == null || userName.trim().isEmpty()) {
+			throw new IllegalArgumentException("User name is not correct");
+		}
+
+		user = this.getUserByUserId(userId);
+		if (user == null || !user.getName().toUpperCase().equals(userName.toUpperCase())) {
+			user = null;
+		}
 		return user;
 	}
 
