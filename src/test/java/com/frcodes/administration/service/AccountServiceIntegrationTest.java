@@ -103,9 +103,33 @@ public class AccountServiceIntegrationTest {
 
 	}
 
+	@Test(expected = NotFoundException.class)
+	public void updateUserAccountNotFound() throws NotFoundException {
+		UserAccountDTO userAccount = buildUserAccountDTO();
+		accountService.updateUserAccount(userAccount);
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void deleteAccountByIBANNull() throws NotFoundException {
 		accountService.deleteAccountByIBAN(null);
+	}
+
+	@Test
+	public void deleteAccountByIBAN() throws NotFoundException {
+
+		UserAccountDTO userAccount = buildUserAccountDTO();
+		accountService.createUserAccount(userAccount);
+		assertEquals(accountService.listAccount().size(), 1L);
+
+		accountService.deleteAccountByIBAN(userAccount.getIBAN());
+
+		assertEquals(accountService.listAccount().size(), 0L);
+	}
+
+	@Test(expected = NotFoundException.class)
+	public void deleteAccountByIBANNotFound() throws NotFoundException {
+
+		accountService.deleteAccountByIBAN("XXX");
 	}
 
 	@Test(expected = IllegalArgumentException.class)

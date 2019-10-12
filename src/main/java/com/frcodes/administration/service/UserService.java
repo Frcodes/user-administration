@@ -51,11 +51,4 @@ public class UserService {
 		return user;
 	}
 
-	public void updateUser(User account) {
-		// TODO: version 1.2
-	}
-
-	public void deleteUser(User account) {
-		// TODO: version 1.2
-	}
 }
