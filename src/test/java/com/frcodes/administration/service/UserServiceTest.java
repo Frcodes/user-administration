@@ -11,6 +11,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UserServiceTest {
 
 	@Autowired
+	private SessionData context;
+
+	@Autowired
 	private UserService userService;
 
 	@Test
@@ -18,7 +21,7 @@ public class UserServiceTest {
 
 		// TODO
 	}
-	
+
 	@Test
 	public void listUser() {
 

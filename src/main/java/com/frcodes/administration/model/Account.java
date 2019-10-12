@@ -2,18 +2,34 @@ package com.frcodes.administration.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "ACCOUNT")
 public class Account {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String accountId;
 
+	@Column(length = 100,  nullable=false)
 	private String userId;
 
+	@Column(unique=true, nullable=false) 
 	private String iban;
 
+	@Column(length = 100)
 	private String createdBy;
 
+	@Column
 	private Date date;
 
+	@Column
 	private Boolean enabled;
 
 	public Account() {
@@ -21,7 +37,6 @@ public class Account {
 	}
 
 	public void init() {
-		accountId = (String.valueOf((new Date()).getTime()));
 		date = new Date();
 		enabled = Boolean.TRUE;
 	}

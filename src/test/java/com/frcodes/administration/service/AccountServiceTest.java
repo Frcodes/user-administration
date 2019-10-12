@@ -10,8 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class AccountServiceTest {
 
-	
-
+	@Autowired
+	private SessionData context;
 
 	@Autowired
 	private AccountService accountService;
@@ -21,7 +21,7 @@ public class AccountServiceTest {
 
 		// TODO
 	}
-	
+
 	@Test
 	public void listAccount() {
 
