@@ -1,4 +1,4 @@
-package com.frcodes.administration.model;
+package com.frcodes.administration.dto;
 
 public class UserAccountDTO {
 

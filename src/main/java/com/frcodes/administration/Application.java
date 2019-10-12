@@ -15,7 +15,7 @@ import com.frcodes.administration.service.ConsoleService;
 @ComponentScan("com.frcodes")
 @EnableJpaRepositories("com.frcodes") 
 @EntityScan("com.frcodes")
-public class AdministrationApplication {
+public class Application {
 
 	@Autowired
 	private ConsoleService consoleService;
@@ -28,7 +28,7 @@ public class AdministrationApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(AdministrationApplication.class, args);
+		SpringApplication.run(Application.class, args);
 		console.start();
 	}
 

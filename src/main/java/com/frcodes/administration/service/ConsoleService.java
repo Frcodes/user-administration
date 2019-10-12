@@ -6,9 +6,9 @@ import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.frcodes.administration.dto.UserAccountDTO;
 import com.frcodes.administration.model.Account;
 import com.frcodes.administration.model.User;
-import com.frcodes.administration.model.UserAccountDTO;
 
 @Service
 public class ConsoleService {
