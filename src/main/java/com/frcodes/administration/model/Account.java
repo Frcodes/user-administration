@@ -1,5 +1,6 @@
 package com.frcodes.administration.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ public class Account {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long accountId;
 
+	// TODO: Use Foreign key and @OneToMany of Hibernate-JPA
 	@Column(nullable = false)
 	private Long userId;
 
@@ -92,8 +94,64 @@ public class Account {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((accountId == null) ? 0 : accountId.hashCode());
+		result = prime * result + ((createdBy == null) ? 0 : createdBy.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
+		result = prime * result + ((iban == null) ? 0 : iban.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		if (accountId == null) {
+			if (other.accountId != null)
+				return false;
+		} else if (!accountId.equals(other.accountId))
+			return false;
+		if (createdBy == null) {
+			if (other.createdBy != null)
+				return false;
+		} else if (!createdBy.equals(other.createdBy))
+			return false;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (enabled == null) {
+			if (other.enabled != null)
+				return false;
+		} else if (!enabled.equals(other.enabled))
+			return false;
+		if (iban == null) {
+			if (other.iban != null)
+				return false;
+		} else if (!iban.equals(other.iban))
+			return false;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
+			return false;
+		return true;
+	}
+
+	@Override
 	public String toString() {
-		return "Account [userId=" + userId + ", iban=" + iban + ", createdBy=" + createdBy + ", date=" + date + "]";
+		return "Account [userId=" + userId + ", iban=" + iban + ", createdBy=" + createdBy + ", date="
+				+ (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(date) + "]";
 	}
 
 }

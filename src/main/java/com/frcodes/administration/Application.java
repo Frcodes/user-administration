@@ -11,9 +11,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.frcodes.administration.service.ConsoleService;
 
+/**
+ * Main class with the requirement annotations for Spring boot application
+ * 
+ * @author Asus
+ *
+ */
 @SpringBootApplication
 @ComponentScan("com.frcodes")
-@EnableJpaRepositories("com.frcodes") 
+@EnableJpaRepositories("com.frcodes")
 @EntityScan("com.frcodes")
 public class Application {
 

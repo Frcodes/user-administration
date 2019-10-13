@@ -19,6 +19,12 @@ import com.frcodes.administration.repository.AccountRepository;
 
 import javassist.NotFoundException;
 
+/**
+ * Class with the methods about accounts management.
+ * 
+ * @author frCodes
+ *
+ */
 @Service
 public class AccountService {
 
@@ -38,7 +44,7 @@ public class AccountService {
 		if (SessionData.isAdministrator()) {
 			list = (List<Account>) accountRepository.findAll();
 		} else {
-			list = (List<Account>) accountRepository.findByUserId(SessionData.getUser().getUserId());
+			list = (List<Account>) accountRepository.findByCreatedBy(SessionData.getUser().getUserId());
 		}
 		return list;
 	}

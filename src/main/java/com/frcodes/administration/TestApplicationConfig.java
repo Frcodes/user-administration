@@ -15,8 +15,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.frcodes.administration.service.ConsoleService;
 
+/**
+ * Main class with the requirement annotations for Testing Spring boot
+ * application. Define 'test' profile with the memory database H2.
+ * 
+ * @author frCodes
+ *
+ */
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.frcodes"})
+@EnableJpaRepositories(basePackages = { "com.frcodes" })
 @ComponentScan("com.frcodes")
 @EnableTransactionManagement
 public class TestApplicationConfig {
@@ -35,17 +42,17 @@ public class TestApplicationConfig {
 		SpringApplication.run(TestApplicationConfig.class, args);
 		console.start();
 	}
-	
+
 	@Bean
-    @Profile("test")
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:db;DB_CLOSE_DELAY=-1");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("sa");
- 
-        return dataSource;
-    }
+	@Profile("test")
+	public DataSource dataSource() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("org.h2.Driver");
+		dataSource.setUrl("jdbc:h2:mem:db;DB_CLOSE_DELAY=-1");
+		dataSource.setUsername("sa");
+		dataSource.setPassword("sa");
+
+		return dataSource;
+	}
 
 }

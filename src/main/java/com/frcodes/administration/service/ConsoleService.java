@@ -2,12 +2,6 @@ package com.frcodes.administration.service;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +10,30 @@ import com.frcodes.administration.dto.UserAccountDTO;
 import com.frcodes.administration.model.Account;
 import com.frcodes.administration.model.User;
 
+/**
+ * Service with input and output in console. This class use other services with
+ * functionality about user administration.
+ * 
+ * @author frCodes
+ *
+ */
 @Service
 public class ConsoleService {
 
-	public enum Action {
+	/**
+	 * Actions: Create, List, Update, Delete, Users registers, Exit
+	 *
+	 */
+	public enum ActionAdministrator {
 		C, L, U, D, R, E
 	}
 
-	public enum ActionAdministrator {
-		C, L, U, E
+	/**
+	 * Actions: Create, List, Exit
+	 *
+	 */
+	public enum ActionBasic {
+		C, L, E
 	}
 
 	@Autowired
@@ -35,6 +44,9 @@ public class ConsoleService {
 
 	private Scanner scanner;
 
+	/**
+	 * Main process with input and output of applications
+	 */
 	public void start() {
 		System.out.println();
 		System.out.println("-------------------------------------------");
@@ -44,7 +56,8 @@ public class ConsoleService {
 		User user = login();
 		if (user != null) {
 			SessionData.setUser(user);
-			System.out.println("User session: " + user.getName() + ", " + user.getSurname());
+			System.out
+					.println("User session. ID: " + user.getUserId() + ", " + user.getName() + " " + user.getSurname());
 			System.out.println("");
 
 			String action = chooseAction();
@@ -59,6 +72,12 @@ public class ConsoleService {
 		System.out.println("-------------------------------------------");
 	}
 
+	/**
+	 * Login of user with name and userId input. If user is not registered, if
+	 * possible to create user.
+	 * 
+	 * @return User login. User registered in applications.
+	 */
 	private User login() {
 
 		User user = null;
@@ -76,20 +95,37 @@ public class ConsoleService {
 		}
 
 		if (user == null) {
-			System.out.println("> User no registrated ");
-			System.out.println("> Do you want to have register ? (Y/N)");
-			String answer = scanner.nextLine();
-			if (answer != null && answer.trim().toUpperCase().equals("Y")) {
-
-				User userNew = this.readUser();
-				user = this.userService.createUser(userNew);
-				System.out.println(
-						"> User registrated with ID: " + user.getUserId() + " and username: " + user.getName());
-			}
+			user = this.registerUser();
 		}
 		return user;
 	}
 
+	/**
+	 * Registers user in application.
+	 * 
+	 * @return User registered
+	 */
+	private User registerUser() {
+		User user = null;
+		System.out.println("> User no registrated ");
+		System.out.println("> Do you want to have register ? (Y/N)");
+		String answer = scanner.nextLine();
+		if (answer != null && answer.trim().toUpperCase().equals("Y")) {
+
+			User userNew = this.readUser();
+			user = this.userService.createUser(userNew);
+			System.out.println("> User registrated with ID: " + user.getUserId() + " and username: " + user.getName());
+		} else if (answer != null && !answer.trim().toUpperCase().equals("N")) {
+			System.out.println("> Answer no valid");
+		}
+
+		return user;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	private String chooseAction() {
 
 		String action = null;
@@ -103,15 +139,14 @@ public class ConsoleService {
 		if (line != null && !line.trim().isEmpty() && line.trim().length() == 1) {
 			action = line;
 			try {
-				Action.valueOf(line.toUpperCase());
 				if (SessionData.isAdministrator()) {
-					Action.valueOf(line.toUpperCase());
-				} else {
 					ActionAdministrator.valueOf(line.toUpperCase());
+				} else {
+					ActionBasic.valueOf(line.toUpperCase());
 				}
 			} catch (IllegalArgumentException ex) {
 				action = null;
-				this.printWithUserError("action no valid");
+				this.printWithUserError("action no permitted");
 			}
 		} else {
 			this.printWithUserError("action no valid");
@@ -121,6 +156,11 @@ public class ConsoleService {
 
 	}
 
+	/**
+	 * Perfom the action choose for user.
+	 * 
+	 * @param action Type of action. See Actions enums.
+	 */
 	private void processAction(String action) {
 
 		if (action != null) {
@@ -159,27 +199,37 @@ public class ConsoleService {
 		}
 	}
 
+	/**
+	 * Read of console information about user account.
+	 * 
+	 * @return User account introduced by user
+	 */
 	private UserAccountDTO readUserAccount() {
 
 		UserAccountDTO userAccount = new UserAccountDTO();
 		printWithUser("Insert account data:");
 
-		printWithUser("First name:");
+		printWithUserLine("First name:");
 		userAccount.setFistName(scanner.nextLine());
 
-		printWithUser("Lastname:");
+		printWithUserLine("Lastname:");
 		userAccount.setLastName(scanner.nextLine());
 
-		printWithUser("IBAN:");
+		printWithUserLine("IBAN:");
 		userAccount.setIBAN(scanner.nextLine());
 
 		return userAccount;
 	}
 
+	/**
+	 * Read of console information about user.
+	 * 
+	 * @return User data introduced by user
+	 */
 	private User readUser() {
 
 		User user = new User();
-		System.out.print("Insert user information:");
+		System.out.println("Insert user information,");
 
 		System.out.print("First name:");
 		user.setName(scanner.nextLine());
@@ -190,17 +240,27 @@ public class ConsoleService {
 		return user;
 	}
 
+	/**
+	 * Read of console IBAN information
+	 * 
+	 * @return IBAN introduced by user
+	 */
 	private String readIBAN() {
 
 		String iBAN = null;
 
-		printWithUser("Insert IBAN:");
+		printWithUserLine("Insert IBAN:");
 
 		iBAN = scanner.nextLine();
 
 		return iBAN;
 	}
 
+	/**
+	 * Writes in console list of account
+	 * 
+	 * @param list List of account information
+	 */
 	private void writeAccount(List<Account> list) {
 
 		printWithUser("Account list:");
@@ -210,6 +270,11 @@ public class ConsoleService {
 		}
 	}
 
+	/**
+	 * Writes in console list of users
+	 * 
+	 * @param list List of users
+	 */
 	private void writeUser(List<User> list) {
 
 		printWithUser("Users registered:");
@@ -219,10 +284,29 @@ public class ConsoleService {
 		}
 	}
 
+	/**
+	 * Writes in console string with prefix user session and enter
+	 * 
+	 * @param str String
+	 */
 	private void printWithUser(String str) {
 		System.out.println("[" + SessionData.getUser().getName() + "] " + str);
 	}
 
+	/**
+	 * Writes in console string with prefix user session
+	 * 
+	 * @param str String
+	 */
+	private void printWithUserLine(String str) {
+		System.out.print("[" + SessionData.getUser().getName() + "] " + str);
+	}
+
+	/**
+	 * Writes in console string with prefix user session and error identify
+	 * 
+	 * @param str String
+	 */
 	private void printWithUserError(String str) {
 		System.out.println("[" + SessionData.getUser().getName() + "] - ERROR: " + str);
 	}

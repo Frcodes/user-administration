@@ -1,5 +1,6 @@
 package com.frcodes.administration.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,6 +15,11 @@ import javax.validation.constraints.NotNull;
 @Table(name = "USER")
 public class User {
 
+	/**
+	 * Type of users. Administrator with all privileges and basic with minimus privileges.
+	 * @author frCodes
+	 *
+	 */
 	public enum UserType {
 		ADMIN, BASIC
 	};
@@ -29,6 +35,7 @@ public class User {
 	@Column(length = 100)
 	private String surname;
 
+	// TODO: Use table with multiples values (Foreign key)
 	@NotNull(message = "User type cannot be null")
 	@Column(length = 50)
 	private String type;
@@ -156,7 +163,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", name=" + name + ", surname=" + surname + ", type=" + type + ", date="
-				+ date + ", enabled=" + enabled + "]";
+				+ (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(date) + ", enabled=" + enabled + "]";
 	}
 
 	

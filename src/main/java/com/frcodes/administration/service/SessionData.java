@@ -1,15 +1,11 @@
 package com.frcodes.administration.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
-import com.frcodes.administration.model.Account;
 import com.frcodes.administration.model.User;
 
 /**
  * Singleton class for load session data.
- * 
  * This class is similar to AppContext of Spring framework.
  * 
  * @author frCodes

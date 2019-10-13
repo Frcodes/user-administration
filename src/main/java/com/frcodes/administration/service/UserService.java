@@ -10,6 +10,12 @@ import com.frcodes.administration.dto.UserAccountDTO;
 import com.frcodes.administration.model.User;
 import com.frcodes.administration.repository.UserRepository;
 
+/**
+ * Class with the methods about accounts management.
+ * 
+ * @author frCodes
+ *
+ */
 @Service
 public class UserService {
 
@@ -50,10 +56,25 @@ public class UserService {
 		return this.createUser(user);
 	}
 
+	/**
+	 * Saves user in application
+	 * 
+	 * @param user User entity
+	 * @return User entity saved
+	 */
 	public User createUser(User user) {
 		return userRepository.save(user);
 	}
-	
+
+	/**
+	 * Validate user information and find user in applications. If user exists and
+	 * it is valid, returns the user found. If user information is not correct,
+	 * throw IllegalArgumentException.
+	 * 
+	 * @param userId   Identify user
+	 * @param userName Name of user
+	 * @return User found. Null if user is not found.
+	 */
 	public User validUser(Long userId, String userName) {
 
 		User user = null;
@@ -61,7 +82,7 @@ public class UserService {
 		if (userId == null) {
 			throw new IllegalArgumentException("User ID is not correct");
 		}
-		
+
 		if (userName == null || userName.trim().isEmpty()) {
 			throw new IllegalArgumentException("User name is not correct");
 		}
