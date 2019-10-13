@@ -1,7 +1,7 @@
 # user-administration
 User Administration
 
-## Version 1.0.0
+## Version 1.0.1-SNAPSHOT
 ### Technical description
 -	Spring boot v2.1.9.RELEASE
 -	Java 1.8
