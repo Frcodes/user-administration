@@ -110,4 +110,20 @@ public class UserServiceUnitTest {
 		User user = userService.getUserByUserId(null);
 		assertNull(user);
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void validUserEmpty() {
+		userService.validUser(null, null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void validUserParameterIncorrect() {
+		userService.validUser(1L, null);
+	}
+
+	@Test
+	public void validUserNotFound() {
+		User user = userService.validUser(1L, "aaa");
+		assertNull(user);
+	}
 }
