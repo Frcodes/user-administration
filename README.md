@@ -10,12 +10,16 @@ User Administration
 -	Hibernate 5.3.12 (Spring data) 
 -	Mockito and JUnit for unit tests
 -   H2 database for memory integration tests
+- 	API RESTfull
+- 	Swagger
 
 ### General description
 Management bank accounts and users.
 Exist two type of users, Administrator with all privileges about users and accounts; and Basic user with only privileges about theirs accounts.
 The application run in console and exits an options for to finish and exist for application
 
+### Documentation
+API documentation in line: http://localhost:8085/swagger-ui.html
 
 ### Run application
 The application required java version 1.8 and postgres database.
